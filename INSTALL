@@ -1,0 +1,5 @@
+INSTALL
+=======
+
+cd tools
+./compile_tools.sh
