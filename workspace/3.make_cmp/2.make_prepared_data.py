@@ -75,6 +75,22 @@ if __name__ == '__main__':
         label_mat = np.loadtxt(os.path.join('label', filename + '.lab'))
         cmp_mat = read_binary_file(
             os.path.join('cmp', filename + '.cmp'), dimension=67)
+        if label_mat.shape[0] <= cmp_mat.shape[0]:
+            cmp_mat = cmp_mat[:label_mat.shape[0], :]
+        else:
+            frame_diff = label_mat.shape[0] - cmp_mat.shape[0]
+            rep = np.repeat(cmp_mat[-1:, :], frame_diff, axis=0)
+            cmp_mat = np.concatenate([cmp_mat, rep], axis=0)
+
+        write_binary_file(
+            label_mat,
+            os.path.join('prepared_label', filename + '.lab'))
+
+        write_binary_file(
+            cmp_mat,
+            os.path.join('prepared_cmp', filename + '.cmp'))
+
+        """
         frame_num = min(label_mat.shape[0], cmp_mat.shape[0])
         write_binary_file(
             label_mat[:frame_num, :],
@@ -102,3 +118,4 @@ if __name__ == '__main__':
         write_binary_file(
             cmp_context_mat[:frame_num, :],
             os.path.join('prepared_cmp', filename + '.cmp'))
+        """

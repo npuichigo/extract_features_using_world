@@ -1,9 +1,9 @@
 #!/bin/bash
-# 1. Getting SPTK-3.10
+# 1. Getting SPTK-3.9
 
 echo "compiling SPTK..."
 (
-    cd SPTK-3.10;
+    cd SPTK-3.9;
     ./configure --prefix=$PWD/build;
     make;
     make install
@@ -32,7 +32,7 @@ echo "compiling REAPER..."
 
 # 4. Copy binaries
 
-SPTK_BIN_DIR=bin/SPTK-3.10
+SPTK_BIN_DIR=bin/SPTK-3.9
 WORLD_BIN_DIR=bin/World
 REAPER_BIN_DIR=bin/REAPER
 
@@ -41,7 +41,7 @@ mkdir -p $SPTK_BIN_DIR
 mkdir -p $WORLD_BIN_DIR
 mkdir -p $REAPER_BIN_DIR
 
-cp SPTK-3.10/build/bin/* $SPTK_BIN_DIR/
+cp SPTK-3.9/build/bin/* $SPTK_BIN_DIR/
 cp World/build/analysis $WORLD_BIN_DIR/
 cp World/build/synthesis $WORLD_BIN_DIR/
 cp REAPER/build/reaper $REAPER_BIN_DIR/

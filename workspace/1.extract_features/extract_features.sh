@@ -2,7 +2,7 @@
 
 # tools directory
 world="$(dirname $(dirname $(pwd)))/tools/bin/World"
-sptk="$(dirname $(dirname $(pwd)))/tools/bin/SPTK-3.10"
+sptk="$(dirname $(dirname $(pwd)))/tools/bin/SPTK-3.9"
 reaper="$(dirname $(dirname $(pwd)))/tools/bin/REAPER"
 
 # input audio directory
@@ -67,8 +67,8 @@ do
     $sptk/x2x +af ${f0_dir}/$file_id.f0a | $sptk/sopr -magic 0.0 -LN -MAGIC -1.0E+10 > ${lf0_dir}/$file_id.lf0
 
     ### extract f0 using reaper
-    $reaper/reaper -i ${wav_dir}/$file_id.wav -a -f ${f0_reaper_dir}/$file_id.f0_tmp -m ${min_f0} -x ${max_f0}
-    python convert_reaper_f0.py ${f0_reaper_dir}/$file_id.f0_tmp ${f0_reaper_dir}/$file_id.f0 ${lf0_reaper_dir}/$file_id.lf0
+    #$reaper/reaper -i ${wav_dir}/$file_id.wav -a -f ${f0_reaper_dir}/$file_id.f0_tmp -m ${min_f0} -x ${max_f0}
+    #python convert_reaper_f0.py ${f0_reaper_dir}/$file_id.f0_tmp ${f0_reaper_dir}/$file_id.f0 ${lf0_reaper_dir}/$file_id.lf0
 
     ### convert sp to mgc ###
     $sptk/x2x +df ${sp_dir}/$file_id.sp | $sptk/sopr -R -m 32768.0 | $sptk/mcep -a $alpha -m $mcsize -l $nFFTHalf -e 1.0E-8 -j 0 -f 0.0 -q 3 > ${mgc_dir}/$file_id.mgc

@@ -2,7 +2,7 @@
 
 # tools directory
 world="$(dirname $(dirname $(pwd)))/tools/bin/World"
-sptk="$(dirname $(dirname $(pwd)))/tools/bin/SPTK-3.10"
+sptk="$(dirname $(dirname $(pwd)))/tools/bin/SPTK-3.9"
 reaper="$(dirname $(dirname $(pwd)))/tools/bin/REAPER"
 
 # Output features directory
