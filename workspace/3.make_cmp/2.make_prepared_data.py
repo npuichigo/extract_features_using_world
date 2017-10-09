@@ -74,11 +74,13 @@ def main():
         print('processing ' + filename)
         sys.stdout.flush()
 
+        # Read data.
         label_mat = np.loadtxt(os.path.join('label', filename + '.lab'))
         cmp_mat = read_binary_file(
             os.path.join('cmp', filename + '.cmp'),
             dimension=FLAGS.mgc_dim + FLAGS.lf0_dim + 1 + FLAGS.bap_dim)
 
+        # Frame alignment.
         if label_mat.shape[0] <= cmp_mat.shape[0]:
             cmp_mat = cmp_mat[:label_mat.shape[0], :]
         else:
@@ -88,23 +90,23 @@ def main():
 
         frame_num =label_mat.shape[0]
 
-        write_binary_file(
-            label_mat,
-            os.path.join('prepared_label', filename + '.lab'))
-
         cmp_context_mat = np.zeros([
             cmp_mat.shape[0], cmp_mat.shape[1] + 2 * FLAGS.f0_context], dtype=np.float32)
 
-        # apply medfilt
-        #cmp_context_mat[:, : FLAGS.mgc_dim] = signal.medfilt(
-        #    cmp_mat[:, : FLAGS.mgc_dim], kernel_size=(3, 1))
+        # Prepare mgc.
         # apply averfilt
         cmp_context_mat[:, : FLAGS.mgc_dim] = signal.convolve2d(
             cmp_mat[:, : FLAGS.mgc_dim],
             [[1.0 / 3], [1.0 / 3], [1.0 / 3]],
             mode='same', boundary='symm')
+        # apply medfilt
+        #cmp_context_mat[:, : FLAGS.mgc_dim] = signal.medfilt(
+        #    cmp_mat[:, : FLAGS.mgc_dim], kernel_size=(3, 1))
+
+        # Prepare vuv.
         cmp_context_mat[:, FLAGS.mgc_dim] = cmp_mat[:, FLAGS.mgc_dim]
 
+        # Prepare lf0 + context.
         for i in xrange(-FLAGS.f0_context, FLAGS.f0_context + 1):
             for j in xrange(frame_num):
                 index = j + i
@@ -115,8 +117,13 @@ def main():
                 cmp_context_mat[j, FLAGS.mgc_dim + 1 + i + FLAGS.f0_context] = (
                     cmp_mat[index, FLAGS.mgc_dim + 1])
 
+        # Prepare bap.
         cmp_context_mat[:, FLAGS.mgc_dim + 1 + 2 * (FLAGS.f0_context) + 1:] = (
             cmp_mat[:, FLAGS.mgc_dim + 1 + FLAGS.lf0_dim:])
+
+        write_binary_file(
+            label_mat,
+            os.path.join('prepared_label', filename + '.lab'))
 
         write_binary_file(
             cmp_context_mat,
